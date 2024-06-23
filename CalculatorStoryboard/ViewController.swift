@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var numberLabel: UILabel!
     @IBOutlet var numButton: [UIButton]!
     
@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     var num1: Int = 0
     var num2: Int = 0
     var temp: String = "0"
-
+    
     func buttonColor() {
         for i in numButton {
             i.backgroundColor = UIColor(red: 58/255, green: 58/255, blue: 58/255, alpha: 1.0)
@@ -29,21 +29,36 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         buttonColor()
-        }
+        
+    }
     
     
     
     
-
+    
     
     
     @IBAction func buttonPressed(_ sender: UIButton) {
         let num = sender.currentTitle!
-        temp.append(num)
-        
-        sendToLabel()
+        // 조건 등록 연산이 중복되지 않도록 // 십이상숫자가될경우 앞에 0을 지우는것
+        switch Int(num)! {
+        case 1...9: temp.append(num)
+        default :
+        temp.append(<#T##other: String##String#>)
         }
+        
+        
+        temp.append(num)
+        sendToLabel()
+    }
     
+    func invalid(op: String) -> String {
+        let temp2: Character = Character(temp.index(temp.endIndex, offsetBy: -1))
+        if temp2 == "+" || temp2 == "-" || temp2 == "/" || temp2 == "*" {
+            
+        }
+        
+    }
     
     @IBAction func opButPressed(_ sender: UIButton) {
         let operation = sender.currentTitle!
@@ -56,31 +71,30 @@ class ViewController: UIViewController {
     
     
     @IBAction func reset(_ sender: UIButton) {
+        
         temp = "0"
         sendToLabel()
     }
     
-    //저장해둔 연산자와 저장해둔 숫자두개를 = 눌렸을떄 실행하게끔
-    func calculate(a: Int, b: Int, operation: String) -> String {
-        switch operation {
-        case "+": return String(a + b)
-        case "-": return String(a - b)
-        case "x": return String(a - b)
-        case "/": return String(a - b)
-        default: return "0"
-        }
+    @IBAction func equalButton(_ sender: UIButton) {
+        temp = String(calculate(expression: temp)!)
         
+        sendToLabel()
     }
-
-
-
-
+    
+    
+    
+    
+    
+    
     func sendToLabel(){ //레이블에 지속전달 디스플레이를 위한
         numberLabel.text = temp
-        }
-    
-    
-    
+            
+            
+        
+        
+        
+    }
     //operator 눌렸을때 -> num1 전달 연산자 전달 연산자 누른순간 계산
     func invalid(num: String, operator: String) -> Int{
         
@@ -90,8 +104,15 @@ class ViewController: UIViewController {
         
     }
     
-
     
+    func calculate(expression: String) -> Int? {
+        let expression = NSExpression(format: expression)
+        if let result = expression.expressionValue(with: nil, context: nil) as? Int {
+            return result
+        } else {
+            return nil
+        }
+    }
     
 }
 
