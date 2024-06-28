@@ -12,55 +12,45 @@ class ViewController: UIViewController {
     @IBOutlet weak var numberLabel: UILabel!
     @IBOutlet var numButton: [UIButton]!
     
-    var temp: String = "0"
+    var tempStr = "0"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        buttonColor()
-        
+        designButton()
     }
+
     
-    
-    
-    
-    
-    
-    
-    @IBAction func buttonPressed(_ sender: UIButton) {
+    @IBAction func numPressed(_ sender: UIButton) {
         let num = sender.currentTitle!
-        temp.append(num)
-        if temp[temp.startIndex] == "0" && temp.count > 2 {
-            temp.removeFirst()
+        tempStr.append(num)
+        if tempStr[tempStr.startIndex] == "0" && tempStr.count > 2 {
+            tempStr.removeFirst()
         }
         sendToLabel()
     }
-    
-//    func invalid(op: String) -> String {
-//        let temp2: Character = Character(temp.index(temp.endIndex, offsetBy: -1))
-//        if temp2 == "+" || temp2 == "-" || temp2 == "/" || temp2 == "*" {
-//            
-//        }
-        
-    //}
-    
-    @IBAction func opButPressed(_ sender: UIButton) {
+
+    @IBAction func opBtnPressed(_ sender: UIButton) {
         let operation = sender.currentTitle!
-        temp.append(operation)
+            if let lastChar = tempStr.last, !lastChar.isNumber {
+                tempStr = String(tempStr.dropLast())
+            }
+            tempStr.append(operation)
+            sendToLabel()
+    }
+    
+    @IBAction func resetBtnPressed(_ sender: UIButton) {
+        tempStr = "0"
         sendToLabel()
     }
     
-    @IBAction func reset(_ sender: UIButton) {
-        temp = "0"
-        sendToLabel()
-    }
-    
-    @IBAction func equalButton(_ sender: UIButton) {
-        temp = String(calculate(expression: temp)!)
+    @IBAction func equalBtnPressed(_ sender: UIButton) {
+        
+        tempStr = String(calculate(expression: tempStr)!)
         sendToLabel()
     }
     
     func sendToLabel(){ //레이블에 지속전달 디스플레이를 위한
-        numberLabel.text = temp
+        numberLabel.text = tempStr
     }
     
     func calculate(expression: String) -> Int? {
@@ -72,13 +62,14 @@ class ViewController: UIViewController {
         }
     }
     
-    func buttonColor() {
+    func designButton() {
         for i in numButton {
+            i.layer.cornerRadius = 40
             i.backgroundColor = UIColor(red: 58/255, green: 58/255, blue: 58/255, alpha: 1.0)
             
         }
     }
-    
+
 }
 
 
